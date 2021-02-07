@@ -4,15 +4,55 @@ import "fmt"
 
 const boardRows int = 6
 const boardColumns int = 7
+const playerOneSign = "X"
+const playerTwoSign = "O"
 
 type Board struct {
 	playerOne [boardRows][boardColumns]int
 	playerTwo [boardRows][boardColumns]int
 }
 
+func (b *Board) print() {
+	for x, row := range b.playerOne {
+		for y, v := range row {
+			player := " "
+			if v == 1 {
+				player = playerOneSign
+			} else if b.playerTwo[x][y] == 1 {
+				player = playerTwoSign
+			} else {
+
+			}
+			fmt.Printf("[%v]", player)
+
+			// println("ONE: [%v, %v]: %v, ", x, y, v)
+			// println("TWO: [%v, %v]: %v, ", x, y, b.playerOne[x][y])
+		}
+		println()
+	}
+	println(" 1  2  3  4  5  6  7")
+}
+
 type Game struct {
-	board         Board
-	playerTwoTurn bool
+	board           Board
+	movesCounter    int
+	isPlayerTwoTurn bool
+}
+
+func (g *Game) makeMove(column int) {
+	column -= 1
+	for i := 0; i < 7; i++ {
+		if g.board.playerOne[i][column] == 0 && g.board.playerTwo[i][column] == 0 {
+			if !g.isPlayerTwoTurn {
+				g.board.playerTwo[i][column] = 1
+			} else {
+				g.board.playerOne[i][column] = 1
+			}
+			break
+		}
+	}
+
+	g.isPlayerTwoTurn = !g.isPlayerTwoTurn
 }
 
 type Node struct {
@@ -30,10 +70,15 @@ func main() {
 }
 
 func play() {
-	game := Game{Board{}, true}
-	for !game.isGameOver() {
-		fmt.Println("next move")
-	}
+	game := Game{Board{}, 0, false}
+	game.board.print()
+	game.makeMove(2)
+	game.makeMove(3)
+	game.makeMove(4)
+	game.board.print()
+	// for !game.isGameOver() {
+	// fmt.Println("next move")
+	// }
 }
 
 func (g *Game) isGameOver() bool {
