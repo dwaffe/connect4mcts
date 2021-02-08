@@ -13,8 +13,8 @@ type Board struct {
 }
 
 func (b *Board) print() {
-	for x, row := range b.playerOne {
-		for y, v := range row {
+	for x := len(b.playerOne) - 1; x >= 0; x-- {
+		for y, v := range b.playerOne[x] {
 			player := " "
 			if v == 1 {
 				player = playerOneSign
@@ -40,7 +40,7 @@ type Game struct {
 }
 
 func (g *Game) makeMove(column int) {
-	column -= 1
+	column--
 	for i := 0; i < 7; i++ {
 		if g.board.playerOne[i][column] == 0 && g.board.playerTwo[i][column] == 0 {
 			if !g.isPlayerTwoTurn {
@@ -72,6 +72,9 @@ func main() {
 func play() {
 	game := Game{Board{}, 0, false}
 	game.board.print()
+	game.makeMove(2)
+	game.makeMove(3)
+	game.makeMove(4)
 	game.makeMove(2)
 	game.makeMove(3)
 	game.makeMove(4)
