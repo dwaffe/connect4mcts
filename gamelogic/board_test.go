@@ -37,6 +37,6 @@ func TestFilledBoardToString(t *testing.T) {
 [X][ ][O][ ][ ][ ][X]
  1  2  3  4  5  6  7`
 	if got := b.String(); got != want {
-		t.Errorf("Hello() = %q, want %q", got, want)
+		t.Errorf("String() = %q, want %q", got, want)
 	}
 }
