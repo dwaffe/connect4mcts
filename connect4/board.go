@@ -1,4 +1,4 @@
-package gamelogic
+package connect4
 
 import "fmt"
 

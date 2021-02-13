@@ -3,30 +3,9 @@ package main
 import (
 	"fmt"
 
-	. "github.com/dwaffe/connect4mcts/gamelogic"
+	. "github.com/dwaffe/connect4mcts/connect4"
+	"github.com/eiannone/keyboard"
 )
-
-type Game struct {
-	board           Board
-	movesCounter    int
-	isPlayerTwoTurn bool
-}
-
-func (g *Game) makeMove(column int) {
-	column--
-	for i := 0; i < 7; i++ {
-		if g.board.PlayerOne[i][column] == 0 && g.board.PlayerTwo[i][column] == 0 {
-			if !g.isPlayerTwoTurn {
-				g.board.PlayerTwo[i][column] = 1
-			} else {
-				g.board.PlayerOne[i][column] = 1
-			}
-			break
-		}
-	}
-
-	g.isPlayerTwoTurn = !g.isPlayerTwoTurn
-}
 
 type Node struct {
 	depth                int
@@ -42,23 +21,50 @@ func main() {
 	play()
 }
 
+func parseToLegalMoveOrReturn0(x rune) int {
+	i := int(x - '0')
+	if i < 1 || i > 7 {
+		return 0
+	}
+
+	return i
+}
+
 func play() {
-	game := Game{Board{}, 0, false}
-	game.board.Print()
-	game.makeMove(2)
-	game.makeMove(3)
-	game.makeMove(4)
-	game.makeMove(2)
-	game.makeMove(3)
-	game.makeMove(4)
-	game.makeMove(7)
-	game.board.Print()
+	game := Game{Board{}}
+	game.Board.Print()
+	game.MakeMove(2)
+	game.MakeMove(3)
+	game.MakeMove(4)
+	game.MakeMove(2)
+	game.MakeMove(3)
+	game.MakeMove(4)
+	game.MakeMove(7)
+	game.Board.Print()
+
+	char, _, err := keyboard.GetSingleKey()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("You pressed: %d\r\n", parseToLegalMoveOrReturn0(char))
+
+	// reader := bufio.NewReader(os.Stdin)
+	// char, _, err := reader.ReadRune()
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// switch char {
+	// case '1':
+	// 	fmt.Println("A Key '1'")
+	// 	break
+	// case '2':
+	// 	fmt.Println("a Key 2")
+	// 	break
+	// }
+
 	// for !game.isGameOver() {
 	// fmt.Println("next move")
 	// }
-}
-
-func (g *Game) isGameOver() bool {
-	// g.board.PlayerOne
-	return false
 }
