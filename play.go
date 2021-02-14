@@ -31,7 +31,7 @@ func parseToLegalMoveOrReturn0(x rune) int {
 }
 
 func play() {
-	game := Game{Board{}}
+	game := Game{}
 	game.Board.Print()
 	game.MakeMove(2)
 	game.MakeMove(3)
