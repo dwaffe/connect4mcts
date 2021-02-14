@@ -6,7 +6,16 @@ type Game struct {
 	isPlayerTwoTurn bool
 }
 
+func parseToLegalMoveOrReturn0(move int) int {
+	if move < 1 || move > 7 {
+		panic(":O")
+	}
+
+	return move
+}
+
 func (g *Game) MakeMove(column int) {
+	parseToLegalMoveOrReturn0(column)
 	column--
 	for i := 0; i < 7; i++ {
 		if g.Board.PlayerOne[i][column] == 0 && g.Board.PlayerTwo[i][column] == 0 {
@@ -22,7 +31,7 @@ func (g *Game) MakeMove(column int) {
 	g.isPlayerTwoTurn = !g.isPlayerTwoTurn
 }
 
-func (g *Game) isGameOver() bool {
+func (g *Game) IsGameOver() bool {
 	// g.Board.PlayerOne
 	return false
 }

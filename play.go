@@ -21,32 +21,24 @@ func main() {
 	play()
 }
 
-func parseToLegalMoveOrReturn0(x rune) int {
-	i := int(x - '0')
-	if i < 1 || i > 7 {
-		return 0
-	}
-
-	return i
+func parseToInt(x rune) int {
+	return int(x - '0')
 }
 
 func play() {
 	game := Game{}
 	game.Board.Print()
-	game.MakeMove(2)
-	game.MakeMove(3)
-	game.MakeMove(4)
-	game.MakeMove(2)
-	game.MakeMove(3)
-	game.MakeMove(4)
-	game.MakeMove(7)
-	game.Board.Print()
 
-	char, _, err := keyboard.GetSingleKey()
-	if err != nil {
-		panic(err)
+	for !game.IsGameOver() {
+
+		fmt.Println("Your move:")
+		char, _, err := keyboard.GetSingleKey()
+		if err != nil {
+			panic(err)
+		}
+		game.MakeMove(parseToInt(char))
+		game.Board.Print()
 	}
-	fmt.Printf("You pressed: %d\r\n", parseToLegalMoveOrReturn0(char))
 
 	// reader := bufio.NewReader(os.Stdin)
 	// char, _, err := reader.ReadRune()
@@ -64,7 +56,4 @@ func play() {
 	// 	break
 	// }
 
-	// for !game.isGameOver() {
-	// fmt.Println("next move")
-	// }
 }
