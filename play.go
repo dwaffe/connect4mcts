@@ -32,28 +32,23 @@ func play() {
 	for !game.IsGameOver() {
 
 		fmt.Println("Your move:")
-		char, _, err := keyboard.GetSingleKey()
+		char, key, err := keyboard.GetSingleKey()
 		if err != nil {
 			panic(err)
 		}
-		game.MakeMove(parseToInt(char))
-		game.Board.Print()
+
+		if key == keyboard.KeyEsc {
+			break
+		}
+
+		err = game.MakeMove(parseToInt(char))
+		if err != nil {
+			fmt.Print(err)
+			fmt.Println(" Press ESC to exit")
+
+		} else {
+			game.Board.Print()
+		}
+
 	}
-
-	// reader := bufio.NewReader(os.Stdin)
-	// char, _, err := reader.ReadRune()
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	// switch char {
-	// case '1':
-	// 	fmt.Println("A Key '1'")
-	// 	break
-	// case '2':
-	// 	fmt.Println("a Key 2")
-	// 	break
-	// }
-
 }
