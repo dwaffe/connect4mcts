@@ -17,6 +17,10 @@ func (b *Board) Print() {
 	println(b.String())
 }
 
+func (b *Board) IsEmpty(row, column int) bool {
+	return b.PlayerOne[row][column] == 0 && b.PlayerTwo[row][column] == 0
+}
+
 func (b *Board) String() (result string) {
 	for x := len(b.PlayerOne) - 1; x >= 0; x-- {
 		for y, v := range b.PlayerOne[x] {
