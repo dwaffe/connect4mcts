@@ -10,12 +10,17 @@ type Game struct {
 	movesCounter    int
 	isPlayerOneTurn bool
 	isGameOver      bool
+	winningPlayer   int
 }
 
 type lastMove struct {
 	column          int
 	row             int
 	isPlayerOneMove bool
+}
+
+func NewGame() *Game {
+	return &Game{isPlayerOneTurn: true}
 }
 
 func (g *Game) isIllegalMove(move int) bool {
@@ -60,7 +65,6 @@ func (g *Game) IsGameOver() bool {
 
 func (g *Game) updateState(lastMove lastMove) {
 	g.movesCounter++
-	fmt.Println(lastMove)
 
 	minColumn := max(lastMove.column-3, 0)
 	maxColumn := min(lastMove.column+3, boardColumns-1)
@@ -78,9 +82,10 @@ func (g *Game) updateState(lastMove lastMove) {
 
 	horizontalWinCounter := 0
 	verticalWinCounter := 0
-	row := minRow
-	for column := minColumn; column <= maxColumn; column++ {
-		// fmt.Println("check:", column, lastMove.row, " is:", playerBoard[lastMove.row][column])
+	diagonalWinCounter := 0
+	mirrorDiagonalWinCounter := 0
+
+	for column, row := minColumn, minRow; column <= maxColumn; column++ {
 		if playerBoard[lastMove.row][column] == 1 {
 			horizontalWinCounter++
 		} else {
@@ -88,7 +93,7 @@ func (g *Game) updateState(lastMove lastMove) {
 		}
 
 		if horizontalWinCounter == 4 {
-			g.isGameOver = true
+			g.setWinningState(lastMove)
 			break
 		}
 
@@ -103,14 +108,51 @@ func (g *Game) updateState(lastMove lastMove) {
 		}
 
 		if verticalWinCounter == 4 {
-			g.isGameOver = true
+			g.setWinningState(lastMove)
 			break
 		}
+
+		// diagonal:
+		if playerBoard[row][column] == 1 {
+			diagonalWinCounter++
+		} else {
+			diagonalWinCounter = 0
+		}
+
+		if diagonalWinCounter == 4 {
+			g.setWinningState(lastMove)
+			break
+		}
+		fmt.Println("maxRow-row:", maxRow-row, "maxColumn-column: ", maxColumn-column, " value: ", playerBoard[maxRow-row][maxColumn-column])
+		fmt.Println("row:", row, "column: ", column, " value: ", playerBoard[row][column])
+		// mirror diagonal:
+		if playerBoard[lastMove.row+row][maxColumn-column] == 1 {
+			mirrorDiagonalWinCounter++
+		} else {
+			mirrorDiagonalWinCounter = 0
+		}
+		fmt.Println("mirrorDiagonalWinCounter: ", mirrorDiagonalWinCounter)
+
+		if mirrorDiagonalWinCounter == 4 {
+			fmt.Println("Not enter?")
+			g.setWinningState(lastMove)
+			break
+		}
+
 		row++
 	}
 
 	if g.movesCounter >= 42 {
 		g.isGameOver = true
+	}
+}
+
+func (g *Game) setWinningState(lastMove lastMove) {
+	g.isGameOver = true
+	if lastMove.isPlayerOneMove {
+		g.winningPlayer = 1
+	} else {
+		g.winningPlayer = 2
 	}
 }
 

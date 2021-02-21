@@ -26,7 +26,7 @@ func parseToInt(x rune) int {
 }
 
 func play() {
-	game := Game{}
+	game := NewGame()
 	game.Board.Print()
 
 	for !game.IsGameOver() {
