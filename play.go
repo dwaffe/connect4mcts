@@ -30,7 +30,6 @@ func play() {
 	game.Board.Print()
 
 	for !game.IsGameOver() {
-
 		fmt.Println("Your move:")
 		char, key, err := keyboard.GetSingleKey()
 		if err != nil {

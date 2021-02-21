@@ -63,12 +63,12 @@ func (g *Game) updateState(lastMove lastMove) {
 	fmt.Println(lastMove)
 
 	minColumn := max(lastMove.column-3, 0)
-	fmt.Println(minColumn)
 	maxColumn := min(lastMove.column+3, boardColumns-1)
-	fmt.Println(maxColumn)
+
+	minRow := max(lastMove.row-3, 0)
+	maxRow := min(lastMove.row+3, boardRows-1)
 
 	var playerBoard [boardRows][boardColumns]int
-	// var playerBoard [][]int
 
 	if lastMove.isPlayerOneMove {
 		playerBoard = g.Board.PlayerOne
@@ -76,18 +76,37 @@ func (g *Game) updateState(lastMove lastMove) {
 		playerBoard = g.Board.PlayerTwo
 	}
 
-	winCounter := 0
+	horizontalWinCounter := 0
+	verticalWinCounter := 0
+	row := minRow
 	for column := minColumn; column <= maxColumn; column++ {
-		fmt.Println("check:", column, lastMove.row, " is:", playerBoard[lastMove.row][column])
+		// fmt.Println("check:", column, lastMove.row, " is:", playerBoard[lastMove.row][column])
 		if playerBoard[lastMove.row][column] == 1 {
-
-			winCounter++
+			horizontalWinCounter++
 		} else {
-			winCounter = 0
+			horizontalWinCounter = 0
 		}
-		if winCounter == 4 {
-			fmt.Println("WWWIIINNN!!!!!")
+
+		if horizontalWinCounter == 4 {
+			g.isGameOver = true
+			break
 		}
+
+		if row > maxRow {
+			continue
+		}
+
+		if playerBoard[row][lastMove.column] == 1 {
+			verticalWinCounter++
+		} else {
+			verticalWinCounter = 0
+		}
+
+		if verticalWinCounter == 4 {
+			g.isGameOver = true
+			break
+		}
+		row++
 	}
 
 	if g.movesCounter >= 42 {
