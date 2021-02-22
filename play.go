@@ -44,7 +44,6 @@ func play() {
 		if err != nil {
 			fmt.Print(err)
 			fmt.Println(" Press ESC to exit")
-
 		} else {
 			game.Board.Print()
 		}

@@ -85,6 +85,8 @@ func (g *Game) updateState(lastMove lastMove) {
 	diagonalWinCounter := 0
 	mirrorDiagonalWinCounter := 0
 
+	fmt.Println(lastMove)
+
 	for column, row := minColumn, minRow; column <= maxColumn; column++ {
 		if playerBoard[lastMove.row][column] == 1 {
 			horizontalWinCounter++
@@ -97,6 +99,35 @@ func (g *Game) updateState(lastMove lastMove) {
 			break
 		}
 
+		// diagonal:
+		tempRow := lastMove.row - (3 - row)
+		tempColumn := lastMove.column + (3 - column)
+		if tempRow <= maxRow && tempRow >= 0 && tempColumn >= 0 && tempColumn <= maxColumn && playerBoard[tempRow][tempColumn] == 1 {
+			diagonalWinCounter++
+		} else {
+			diagonalWinCounter = 0
+		}
+
+		if diagonalWinCounter == 4 {
+			g.setWinningState(lastMove)
+			break
+		}
+
+		// mirror diagonal:
+		tempRow = lastMove.row - 3 + row
+		tempColumn = lastMove.column - 3 + row
+		if tempRow <= maxRow && tempRow >= 0 && tempColumn >= 0 && tempColumn <= maxColumn && playerBoard[tempRow][tempColumn] == 1 {
+			mirrorDiagonalWinCounter++
+		} else {
+			mirrorDiagonalWinCounter = 0
+		}
+
+		if mirrorDiagonalWinCounter == 4 {
+			g.setWinningState(lastMove)
+			break
+		}
+
+		// vertical:
 		if row > maxRow {
 			continue
 		}
@@ -108,33 +139,6 @@ func (g *Game) updateState(lastMove lastMove) {
 		}
 
 		if verticalWinCounter == 4 {
-			g.setWinningState(lastMove)
-			break
-		}
-
-		// diagonal:
-		if playerBoard[row][column] == 1 {
-			diagonalWinCounter++
-		} else {
-			diagonalWinCounter = 0
-		}
-
-		if diagonalWinCounter == 4 {
-			g.setWinningState(lastMove)
-			break
-		}
-		fmt.Println("maxRow-row:", maxRow-row, "maxColumn-column: ", maxColumn-column, " value: ", playerBoard[maxRow-row][maxColumn-column])
-		fmt.Println("row:", row, "column: ", column, " value: ", playerBoard[row][column])
-		// mirror diagonal:
-		if playerBoard[lastMove.row+row][maxColumn-column] == 1 {
-			mirrorDiagonalWinCounter++
-		} else {
-			mirrorDiagonalWinCounter = 0
-		}
-		fmt.Println("mirrorDiagonalWinCounter: ", mirrorDiagonalWinCounter)
-
-		if mirrorDiagonalWinCounter == 4 {
-			fmt.Println("Not enter?")
 			g.setWinningState(lastMove)
 			break
 		}

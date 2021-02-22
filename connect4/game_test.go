@@ -35,8 +35,6 @@ func TestVerticalWinningState(t *testing.T) {
 	g.MakeMove(2)
 	g.MakeMove(3)
 
-	g.Board.Print()
-
 	if g.IsGameOver() != true {
 		t.Errorf("Game should be over")
 	}
@@ -69,11 +67,11 @@ func TestDiagonalWinningState(t *testing.T) {
 	g.MakeMove(4)
 
 	if g.IsGameOver() != true {
-		t.Errorf("Game should be over: %v", g.Board)
+		t.Errorf("Game should be over:\n%v", g.Board.String())
 	}
 
 	if g.winningPlayer != 1 {
-		t.Errorf("PlayerOne should won: %v", g.Board)
+		t.Errorf("PlayerOne should won:\n%v", g.Board.String())
 	}
 }
 
@@ -100,11 +98,11 @@ func TestMirrorDiagonalWinningState(t *testing.T) {
 	g.MakeMove(4)
 
 	if g.IsGameOver() != true {
-		t.Errorf("Game should be over: %v", g.Board.String())
+		t.Errorf("Game should be over:\n%v", g.Board.String())
 	}
 
 	if g.winningPlayer != 1 {
-		t.Errorf("PlayerOne should won: %v", g.Board.String())
+		t.Errorf("PlayerOne should won:\n%v", g.Board.String())
 	}
 }
 
@@ -140,5 +138,19 @@ func TestMirrorDiagonalWinningState2(t *testing.T) {
 }
 
 func TestNotWinningState(t *testing.T) {
+	g := NewGame()
+	g.MakeMove(1)
+	g.MakeMove(3)
+	g.MakeMove(2)
+	g.MakeMove(5)
+	g.MakeMove(2)
+	g.MakeMove(1)
 
+	if g.IsGameOver() == true {
+		t.Errorf("Game should NOT be over:\n%v", g.Board.String())
+	}
+
+	if g.winningPlayer != 0 {
+		t.Errorf("There is no winner:\n%v", g.Board.String())
+	}
 }
