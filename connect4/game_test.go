@@ -13,7 +13,6 @@ func TestHorizontalWinningState(t *testing.T) {
 	g := NewGame()
 	g.Board = board
 	g.MakeMove(2)
-	g.Board.Print()
 
 	if g.IsGameOver() != true {
 		t.Errorf("Game should be over")

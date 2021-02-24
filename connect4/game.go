@@ -2,7 +2,6 @@ package connect4
 
 import (
 	"errors"
-	"fmt"
 )
 
 type Game struct {
@@ -11,6 +10,7 @@ type Game struct {
 	isPlayerOneTurn bool
 	isGameOver      bool
 	winningPlayer   int
+	PlayerOne	Player
 }
 
 type lastMove struct {
@@ -84,8 +84,6 @@ func (g *Game) updateState(lastMove lastMove) {
 	verticalWinCounter := 0
 	diagonalWinCounter := 0
 	mirrorDiagonalWinCounter := 0
-
-	fmt.Println(lastMove)
 
 	for column, row := minColumn, minRow; column <= maxColumn; column++ {
 		if playerBoard[lastMove.row][column] == 1 {
