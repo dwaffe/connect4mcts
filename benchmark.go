@@ -8,22 +8,13 @@ import (
 	. "github.com/dwaffe/connect4mcts/connect4"
 )
 
-type Node struct {
-	depth                int
-	board                Board
-	actionCount          int     // N
-	value                float32 // W
-	meanValueOfNextState float32 // Q
-	// probabilityOfSelecting // P
-}
-
 func main() {
 	start := time.Now()
 	seconds := 3
 	playout_count := 0
 
 	for {
-		play()
+		playOneRandomGame()
 		elapsed_time := time.Since(start)
 		playout_count++
 		if int(elapsed_time.Seconds()) >= seconds {
@@ -34,11 +25,7 @@ func main() {
 	}
 }
 
-func parseToInt(x rune) int {
-	return int(x - '0')
-}
-
-func play() {
+func playOneRandomGame() {
 	game := NewGame()
 
 	for !game.IsGameOver() {

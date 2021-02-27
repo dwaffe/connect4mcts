@@ -47,6 +47,5 @@ func play() {
 		} else {
 			game.Board.Print()
 		}
-
 	}
 }
