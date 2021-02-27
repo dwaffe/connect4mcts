@@ -2,27 +2,26 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	. "github.com/dwaffe/connect4mcts/connect4"
 	"github.com/eiannone/keyboard"
 )
 
-type Node struct {
-	depth                int
-	board                Board
-	actionCount          int     // N
-	value                float32 // W
-	meanValueOfNextState float32 // Q
-	// probabilityOfSelecting // P
-}
-
 func main() {
 	fmt.Println("Play connect4!")
-	play()
+	// benchmark()
+	botPlay()
+	// play()
 }
 
 func parseToInt(x rune) int {
 	return int(x - '0')
+}
+
+func botPlay() {
+	game := NewGame()
+	game.Play(GetEasyPlayer(), GetEasyPlayer())
 }
 
 func play() {
@@ -46,6 +45,23 @@ func play() {
 			fmt.Println(" Press ESC to exit")
 		} else {
 			game.Board.Print()
+		}
+	}
+}
+
+func benchmark() {
+	start := time.Now()
+	seconds := 3
+	playout_count := 0
+
+	for {
+		botPlay()
+		elapsed_time := time.Since(start)
+		playout_count++
+		if int(elapsed_time.Seconds()) >= seconds {
+			fmt.Println("Finished iterating in: ", elapsed_time, " seconds")
+			fmt.Println("Played games: ", playout_count)
+			break
 		}
 	}
 }

@@ -10,7 +10,6 @@ type Game struct {
 	isPlayerOneTurn bool
 	isGameOver      bool
 	winningPlayer   int
-	PlayerOne	Player
 }
 
 type lastMove struct {
@@ -29,6 +28,19 @@ func (g *Game) isIllegalMove(move int) bool {
 	}
 
 	return !g.Board.IsEmpty(boardRows-1, move-1)
+}
+
+func (g *Game) Play(PlayerOne, PlayerTwo func(Board, bool) int) {
+	var player func(Board, bool) int
+	for !g.IsGameOver() {
+		if g.isPlayerOneTurn {
+			player = PlayerOne
+		} else {
+			player = PlayerTwo
+		}
+		g.MakeMove(player(g.Board, g.isPlayerOneTurn))
+		g.Board.Print()
+	}
 }
 
 func (g *Game) MakeMove(column int) (err error) {
