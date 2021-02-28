@@ -28,6 +28,7 @@ func GetEasyPlayer() func(board Board, amIPlayerOne bool) int {
 func GetMediumPlayer() func(board Board, amIPlayerOne bool) int {
 
 	return func(board Board, amIPlayerOne bool) int {
+
 		return rand.Intn(8)
 	}
 }

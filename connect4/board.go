@@ -40,3 +40,11 @@ func (b *Board) String() (result string) {
 
 	return
 }
+
+func (b *Board) IsIllegalMove(move int) bool {
+	if move < 1 || move > boardColumns {
+		return true
+	}
+
+	return !b.IsEmpty(boardRows-1, move-1)
+}

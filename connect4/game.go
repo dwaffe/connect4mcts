@@ -2,6 +2,7 @@ package connect4
 
 import (
 	"errors"
+	"fmt"
 )
 
 type Game struct {
@@ -22,14 +23,6 @@ func NewGame() *Game {
 	return &Game{isPlayerOneTurn: true}
 }
 
-func (g *Game) isIllegalMove(move int) bool {
-	if move < 1 || move > boardColumns {
-		return true
-	}
-
-	return !g.Board.IsEmpty(boardRows-1, move-1)
-}
-
 func (g *Game) Play(PlayerOne, PlayerTwo func(Board, bool) int) {
 	var player func(Board, bool) int
 	for !g.IsGameOver() {
@@ -41,10 +34,17 @@ func (g *Game) Play(PlayerOne, PlayerTwo func(Board, bool) int) {
 		g.MakeMove(player(g.Board, g.isPlayerOneTurn))
 		g.Board.Print()
 	}
+
+	if g.winningPlayer == 0 {
+		fmt.Println("It's a draw")
+	} else {
+		fmt.Printf("Player %v has won!\n", g.winningPlayer)
+	}
+
 }
 
 func (g *Game) MakeMove(column int) (err error) {
-	if g.isIllegalMove(column) {
+	if g.Board.IsIllegalMove(column) {
 		err = errors.New("Illegal move.")
 		return
 	}
