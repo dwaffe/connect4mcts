@@ -5,15 +5,6 @@ import (
 	"time"
 )
 
-type Node struct {
-	depth                int
-	board                Board
-	actionCount          int     // N
-	value                float32 // W
-	meanValueOfNextState float32 // Q
-	// probabilityOfSelecting // P
-}
-
 type Player interface {
 	getMove(board Board, amIPlayerOne bool) int
 }
@@ -28,7 +19,8 @@ func GetEasyPlayer() func(board Board, amIPlayerOne bool) int {
 func GetMediumPlayer() func(board Board, amIPlayerOne bool) int {
 
 	return func(board Board, amIPlayerOne bool) int {
-
+		node := Node{game: Game{isPlayerOneTurn: amIPlayerOne}}
+		node.selectAndExpand()
 		return rand.Intn(8)
 	}
 }
