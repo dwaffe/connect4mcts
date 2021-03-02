@@ -42,7 +42,7 @@ func (n *Node) createLegalNodes() {
 		}
 		copyOfGame := n.game
 		copyOfGame.MakeMove(i)
-		n.legalMoves = append(n.legalMoves, Node{game: copyOfGame})
+		n.legalMoves = append(n.legalMoves, Node{game: copyOfGame, playoutCount: 1, winningCount: 1})
 	}
 }
 

@@ -19,7 +19,7 @@ func GetEasyPlayer() func(board Board, amIPlayerOne bool) int {
 func GetMediumPlayer() func(board Board, amIPlayerOne bool) int {
 
 	return func(board Board, amIPlayerOne bool) int {
-		node := Node{game: Game{isPlayerOneTurn: amIPlayerOne}}
+		node := Node{game: Game{isPlayerOneTurn: amIPlayerOne}, playoutCount: 1, winningCount: 1}
 		node.selectAndExpand()
 		return rand.Intn(8)
 	}
