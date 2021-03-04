@@ -14,6 +14,7 @@ type Node struct {
 	winningCount int
 	legalMoves   []Node
 	parentNode   *Node
+	me           int
 
 	// actionCount          int     // N
 	// value                float32 // W
@@ -31,8 +32,33 @@ func (n *Node) selectAndExpand() {
 	for i, childNode := range n.legalMoves {
 		calculatedUCT[i] = childNode.calculateUpperConfidenceBound()
 	}
-
+	n.legalMoves[getHighestValue(calculatedUCT)].playout()
 	fmt.Println(calculatedUCT)
+}
+
+func getHighestValue(calculatedUCT [7]float64) int {
+	var highestValue float64
+	var highestIndex int
+	for i := 0; i < len(calculatedUCT); i++ {
+		if calculatedUCT[i] > highestValue {
+			highestIndex = i
+			highestValue = calculatedUCT[i]
+		}
+	}
+
+	return highestIndex
+}
+
+func (n *Node) getBestMove() int {
+	if len(n.legalMoves) == 0 {
+		n.createLegalNodes()
+	}
+	var calculatedUCT [7]float64
+
+	for i, childNode := range n.legalMoves {
+		calculatedUCT[i] = childNode.calculateUpperConfidenceBound()
+	}
+	return getHighestValue(calculatedUCT)
 }
 
 func (n *Node) createLegalNodes() {
@@ -42,7 +68,7 @@ func (n *Node) createLegalNodes() {
 		}
 		copyOfGame := n.game
 		copyOfGame.MakeMove(i)
-		n.legalMoves = append(n.legalMoves, Node{game: copyOfGame, playoutCount: 1, winningCount: 1})
+		n.legalMoves = append(n.legalMoves, Node{game: copyOfGame, playoutCount: 1, winningCount: 1, me: n.me})
 	}
 }
 
@@ -55,4 +81,32 @@ func (n *Node) calculateUpperConfidenceBound() float64 {
 	}
 
 	return float64(n.winningCount)/float64(n.playoutCount) + (exploreCoefficients * float64(math.Sqrt(float64((math.Log(parentPlayoutCount))/float64(n.playoutCount)))))
+}
+
+func (n *Node) playout() {
+	tempGame := n.game
+	tempGame.Play(GetEasyPlayer(), GetEasyPlayer(), true)
+	switch tempGame.winningPlayer {
+	case 0:
+		n.update(0.5)
+	case n.me:
+		n.update(1)
+	default:
+		n.update(0)
+	}
+}
+
+func (n *Node) update(value float64) {
+	n.playoutCount++
+	if value == 1 {
+		n.winningCount++
+	}
+
+	if value == 0 {
+		n.winningCount--
+	}
+
+	if n.parentNode != nil {
+		n.parentNode.update(value)
+	}
 }

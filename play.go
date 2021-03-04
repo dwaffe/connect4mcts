@@ -21,7 +21,8 @@ func parseToInt(x rune) int {
 
 func botPlay() {
 	game := NewGame()
-	game.Play(GetEasyPlayer(), GetMediumPlayer())
+	// game.Play(GetEasyPlayer(), GetMediumPlayer(), false)
+	game.Play(GetHumanPlayer(), GetMediumPlayer(), false)
 }
 
 func play() {

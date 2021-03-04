@@ -23,7 +23,7 @@ func NewGame() *Game {
 	return &Game{isPlayerOneTurn: true}
 }
 
-func (g *Game) Play(PlayerOne, PlayerTwo func(Board, bool) int) {
+func (g *Game) Play(PlayerOne, PlayerTwo func(Board, bool) int, silence bool) {
 	var player func(Board, bool) int
 	for !g.IsGameOver() {
 		if g.isPlayerOneTurn {
@@ -32,7 +32,9 @@ func (g *Game) Play(PlayerOne, PlayerTwo func(Board, bool) int) {
 			player = PlayerTwo
 		}
 		g.MakeMove(player(g.Board, g.isPlayerOneTurn))
-		g.Board.Print()
+		if !silence {
+			g.Board.Print()
+		}
 	}
 
 	if g.winningPlayer == 0 {
