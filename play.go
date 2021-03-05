@@ -23,6 +23,7 @@ func botPlay() {
 	game := NewGame()
 	// game.Play(GetEasyPlayer(), GetMediumPlayer(), false)
 	game.Play(GetHumanPlayer(), GetMediumPlayer(), false)
+	// game.Play(GetHumanPlayer(), GetEasyPlayer(), false)
 }
 
 func play() {

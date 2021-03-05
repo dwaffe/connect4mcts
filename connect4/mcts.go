@@ -12,7 +12,7 @@ type Node struct {
 	game         Game
 	playoutCount int
 	winningCount int
-	legalMoves   []Node
+	legalMoves   [7]*Node
 	parentNode   *Node
 	me           int
 
@@ -24,16 +24,19 @@ type Node struct {
 }
 
 func (n *Node) selectAndExpand() {
-	if len(n.legalMoves) == 0 {
-		n.createLegalNodes()
-	}
+	n.createLegalNodes()
 	var calculatedUCT [7]float64
 
 	for i, childNode := range n.legalMoves {
+		if childNode == nil {
+			calculatedUCT[i] = -100
+			continue
+		}
 		calculatedUCT[i] = childNode.calculateUpperConfidenceBound()
 	}
-	n.legalMoves[getHighestValue(calculatedUCT)].playout()
 	fmt.Println(calculatedUCT)
+	fmt.Println(n.legalMoves)
+	n.legalMoves[getHighestValue(calculatedUCT)].playout()
 }
 
 func getHighestValue(calculatedUCT [7]float64) int {
@@ -50,25 +53,29 @@ func getHighestValue(calculatedUCT [7]float64) int {
 }
 
 func (n *Node) getBestMove() int {
-	if len(n.legalMoves) == 0 {
-		n.createLegalNodes()
-	}
+	n.createLegalNodes()
 	var calculatedUCT [7]float64
 
 	for i, childNode := range n.legalMoves {
+		if childNode == nil {
+			continue
+		}
 		calculatedUCT[i] = childNode.calculateUpperConfidenceBound()
 	}
 	return getHighestValue(calculatedUCT)
 }
 
 func (n *Node) createLegalNodes() {
-	for i := 1; i <= 7; i++ {
-		if n.game.Board.IsIllegalMove(i) {
+	for i := 0; i < boardColumns; i++ {
+		if n.legalMoves[i] != nil {
+			continue
+		}
+		if n.game.Board.IsIllegalMove(i + 1) {
 			continue
 		}
 		copyOfGame := n.game
 		copyOfGame.MakeMove(i)
-		n.legalMoves = append(n.legalMoves, Node{game: copyOfGame, playoutCount: 1, winningCount: 1, me: n.me})
+		n.legalMoves[i] = &Node{game: copyOfGame, playoutCount: 1, winningCount: 1, me: n.me}
 	}
 }
 

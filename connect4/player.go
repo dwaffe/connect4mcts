@@ -32,6 +32,23 @@ func parseToInt(x rune) int {
 func GetEasyPlayer() func(board Board, amIPlayerOne bool) int {
 	rand.Seed(time.Now().UTC().UnixNano())
 	return func(board Board, amIPlayerOne bool) int {
+		var me int
+		if amIPlayerOne == true {
+			me = 1
+		} else {
+			me = 2
+		}
+		for i := 1; i < boardColumns; i++ {
+			game := Game{Board: board, movesCounter: 8, isPlayerOneTurn: amIPlayerOne}
+			if game.Board.IsIllegalMove(i) {
+				continue
+			}
+
+			game.MakeMove(i)
+			if game.winningPlayer == me {
+				return i
+			}
+		}
 		return rand.Intn(8)
 	}
 }
@@ -46,7 +63,7 @@ func GetMediumPlayer() func(board Board, amIPlayerOne bool) int {
 			me = 2
 		}
 		node := Node{game: Game{isPlayerOneTurn: amIPlayerOne}, playoutCount: 1, winningCount: 1, me: me}
-		for i := 0; i < 50000; i++ {
+		for i := 0; i < 5000; i++ {
 			node.selectAndExpand()
 		}
 
