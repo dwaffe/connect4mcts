@@ -153,3 +153,20 @@ func TestNotWinningState(t *testing.T) {
 		t.Errorf("There is no winner:\n%v", g.Board.String())
 	}
 }
+
+func TestNotWinningState2(t *testing.T) {
+	g := NewGame()
+	g.MakeMove(5)
+	g.MakeMove(6)
+	g.MakeMove(5)
+	g.MakeMove(5)
+	g.MakeMove(4)
+
+	if g.IsGameOver() == true {
+		t.Errorf("Game should NOT be over:\n%v", g.Board.String())
+	}
+
+	if g.winningPlayer != 0 {
+		t.Errorf("There is no winner:\n%v", g.Board.String())
+	}
+}

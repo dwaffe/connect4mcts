@@ -23,15 +23,15 @@ func NewGame() *Game {
 	return &Game{isPlayerOneTurn: true}
 }
 
-func (g *Game) Play(PlayerOne, PlayerTwo func(Board, bool) int, silence bool) {
-	var player func(Board, bool) int
+func (g *Game) Play(PlayerOne, PlayerTwo func(Game, bool) int, silence bool) {
+	var player func(Game, bool) int
 	for !g.IsGameOver() {
 		if g.isPlayerOneTurn {
 			player = PlayerOne
 		} else {
 			player = PlayerTwo
 		}
-		g.MakeMove(player(g.Board, g.isPlayerOneTurn))
+		g.MakeMove(player(*g, g.isPlayerOneTurn))
 		if !silence {
 			g.Board.Print()
 		}
@@ -128,6 +128,7 @@ func (g *Game) updateState(lastMove lastMove) {
 		// mirror diagonal:
 		tempRow = lastMove.row - 3 + row
 		tempColumn = lastMove.column - 3 + row
+		fmt.Println("tempRow: ", tempRow, "tempColumn: ", tempColumn)
 		if tempRow <= maxRow && tempRow >= 0 && tempColumn >= 0 && tempColumn <= maxColumn && playerBoard[tempRow][tempColumn] == 1 {
 			mirrorDiagonalWinCounter++
 		} else {

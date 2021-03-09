@@ -29,7 +29,7 @@ func (n *Node) selectAndExpand() {
 
 	for i, childNode := range n.legalMoves {
 		if childNode == nil {
-			calculatedUCT[i] = -100
+			calculatedUCT[i] = -100.0
 			continue
 		}
 		calculatedUCT[i] = childNode.calculateUpperConfidenceBound()
@@ -40,7 +40,7 @@ func (n *Node) selectAndExpand() {
 }
 
 func getHighestValue(calculatedUCT [7]float64) int {
-	var highestValue float64
+	highestValue := -500.0
 	var highestIndex int
 	for i := 0; i < len(calculatedUCT); i++ {
 		if calculatedUCT[i] > highestValue {
@@ -53,16 +53,17 @@ func getHighestValue(calculatedUCT [7]float64) int {
 }
 
 func (n *Node) getBestMove() int {
-	n.createLegalNodes()
-	var calculatedUCT [7]float64
+	var playoutCount [7]float64
 
 	for i, childNode := range n.legalMoves {
 		if childNode == nil {
+			playoutCount[i] = 1
 			continue
 		}
-		calculatedUCT[i] = childNode.calculateUpperConfidenceBound()
+		playoutCount[i] = float64(childNode.playoutCount)
 	}
-	return getHighestValue(calculatedUCT)
+	fmt.Println(playoutCount)
+	return getHighestValue(playoutCount)
 }
 
 func (n *Node) createLegalNodes() {
