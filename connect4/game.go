@@ -127,8 +127,7 @@ func (g *Game) updateState(lastMove lastMove) {
 
 		// mirror diagonal:
 		tempRow = lastMove.row - 3 + row
-		tempColumn = lastMove.column - 3 + row
-		fmt.Println("tempRow: ", tempRow, "tempColumn: ", tempColumn)
+		tempColumn = lastMove.column - 3 + column
 		if tempRow <= maxRow && tempRow >= 0 && tempColumn >= 0 && tempColumn <= maxColumn && playerBoard[tempRow][tempColumn] == 1 {
 			mirrorDiagonalWinCounter++
 		} else {
