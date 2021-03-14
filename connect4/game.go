@@ -37,12 +37,15 @@ func (g *Game) Play(PlayerOne, PlayerTwo func(Game, bool) int, silence bool) {
 		}
 	}
 
+	if silence {
+		return
+	}
+
 	if g.winningPlayer == 0 {
 		fmt.Println("It's a draw")
 	} else {
 		fmt.Printf("Player %v has won!\n", g.winningPlayer)
 	}
-
 }
 
 func (g *Game) MakeMove(column int) (err error) {

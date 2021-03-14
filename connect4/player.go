@@ -65,10 +65,6 @@ func GetMediumPlayer() func(game Game, amIPlayerOne bool) int {
 
 		game.isPlayerOneTurn = amIPlayerOne
 		node := Node{game: game, playoutCount: 1, winningCount: 1, me: me}
-		for i := 0; i < 10000; i++ {
-			node.selectAndExpand()
-		}
-
-		return node.getBestMove() + 1
+		return node.getBestMove()
 	}
 }

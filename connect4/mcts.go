@@ -6,6 +6,7 @@ import (
 )
 
 const exploreCoefficients = 1.414
+const maxDepth = 4
 
 type Node struct {
 	// board        Board
@@ -23,7 +24,7 @@ type Node struct {
 
 }
 
-func (n *Node) selectAndExpand() {
+func (n *Node) selectAndExpand(currentDepth int) {
 	n.createLegalNodes()
 	var calculatedUCT [7]float64
 
@@ -34,18 +35,22 @@ func (n *Node) selectAndExpand() {
 		}
 		calculatedUCT[i] = childNode.calculateUpperConfidenceBound()
 	}
-	fmt.Println(calculatedUCT)
-	fmt.Println(n.legalMoves)
-	n.legalMoves[getHighestValue(calculatedUCT)].playout()
+	// fmt.Println(calculatedUCT)
+	// fmt.Println(n.legalMoves)
+	if currentDepth == maxDepth {
+		n.legalMoves[getHighestValue(calculatedUCT)].playout()
+	} else {
+		n.legalMoves[getHighestValue(calculatedUCT)].selectAndExpand(currentDepth + 1)
+	}
 }
 
-func getHighestValue(calculatedUCT [7]float64) int {
-	highestValue := -500.0
+func getHighestValue(array [7]float64) int {
+	highestValue := -99999999.9
 	var highestIndex int
-	for i := 0; i < len(calculatedUCT); i++ {
-		if calculatedUCT[i] > highestValue {
+	for i := 0; i < len(array); i++ {
+		if array[i] > highestValue {
 			highestIndex = i
-			highestValue = calculatedUCT[i]
+			highestValue = array[i]
 		}
 	}
 
@@ -53,17 +58,23 @@ func getHighestValue(calculatedUCT [7]float64) int {
 }
 
 func (n *Node) getBestMove() int {
+
+	for i := 0; i < 10000; i++ {
+		n.selectAndExpand(0)
+	}
+
 	var playoutCount [7]float64
 
 	for i, childNode := range n.legalMoves {
 		if childNode == nil {
-			playoutCount[i] = 1
+			playoutCount[i] = 0
 			continue
 		}
 		playoutCount[i] = float64(childNode.playoutCount)
 	}
-	fmt.Println(playoutCount)
-	return getHighestValue(playoutCount)
+
+	fmt.Println("last:", playoutCount)
+	return getHighestValue(playoutCount) + 1
 }
 
 func (n *Node) createLegalNodes() {
@@ -76,7 +87,7 @@ func (n *Node) createLegalNodes() {
 		}
 		copyOfGame := n.game
 		copyOfGame.MakeMove(i)
-		n.legalMoves[i] = &Node{game: copyOfGame, playoutCount: 1, winningCount: 1, me: n.me}
+		n.legalMoves[i] = &Node{game: copyOfGame, playoutCount: 1, winningCount: 0, me: n.me}
 	}
 }
 
